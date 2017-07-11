@@ -106,6 +106,7 @@ class ilTestPDFGenerator
 			$filename .= '.pdf';
 		}
 		
+        define ('PDF_PAGE_ORIENTATION', 'L'); alexedit
 		require_once './Services/PDFGeneration/classes/class.ilPDFGeneration.php';
 		
 		$job = new ilPDFGenerationJob();

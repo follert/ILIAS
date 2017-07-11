@@ -476,7 +476,9 @@ il.UICore = {
 					$(fc).offset({top: sm_reg.top});
 				}
 			}
-
+		} // alexedit
+		tf = document.getElementsByClassName("ilTopFixed")[0]; // alexedit
+		if ($(fc).css("position") != "static" || $(tf).css("position") != "fixed") { // alexedit
 			// fix left navigation area
 			if (el && sm) {
 				sm_reg = il.Util.getRegion(sm);
@@ -984,6 +986,8 @@ function startSAHS(SAHSurl, SAHStarget, SAHSopenMode, SAHSwidth, SAHSheight)
 		if(document.body.offsetHeight) SAHSheight=document.getElementById("mainspacekeeper").offsetHeight;
 		if(SAHSheight==0) SAHSheight=document.body.offsetHeight-200;
 		if(SAHSheight==0) SAHSheight=650;
+        SAHSheight=document.body.offsetHeight-document.getElementById("mainspacekeeper").offsetTop;  //alexedit
+        $('#minheight').hide(); $('footer').hide(); //alexedit
 	}
 	if (SAHSopenMode == 1 || SAHSopenMode == 2){
 		document.getElementById("mainspacekeeper").innerHTML='<iframe src="'+SAHSurl+'" width="'+SAHSwidth+'" height='+SAHSheight+' frameborder="0"></iframe>';

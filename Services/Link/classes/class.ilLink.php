@@ -33,10 +33,10 @@ class ilLink
 		switch($a_type)
 		{
 			case 'git':
-			//case 'pg':
-				return ILIAS_HTTP_PATH.'/'.IL_INTERNAL_LINK_SCRIPT.'?client_id='.CLIENT_ID.$param_string.$append;
+				return ILIAS_HTTP_PATH.'/'.IL_INTERNAL_LINK_SCRIPT.'?'.	 $param_string.$append; ##alexedit clientid entfernt
 			
 			default:
+				return ILIAS_HTTP_PATH.'/'.IL_INTERNAL_LINK_SCRIPT.'?target='.$a_type.'_'.$a_ref_id.$append.$param_string; #alexedit
 				return ILIAS_HTTP_PATH.'/'.IL_INTERNAL_LINK_SCRIPT.'?target='.$a_type.'_'.$a_ref_id.$append.'&client_id='.CLIENT_ID.$param_string;
 		}
 	}
@@ -77,7 +77,7 @@ class ilLink
 		}
 		
 		// urlencode for append is needed e.g. to process "/" in wiki page names correctly
-		return ILIAS_HTTP_PATH.'/goto_'.urlencode(CLIENT_ID).'_'.$a_type.'_'.$a_ref_id.urlencode($append).'.html';
+		return ILIAS_HTTP_PATH.'/goto__'.$a_type.'_'.$a_ref_id.urlencode($append).'.html'; #alexedit
 	}	
 }
 ?>

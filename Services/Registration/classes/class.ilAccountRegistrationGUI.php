@@ -92,6 +92,10 @@ class ilAccountRegistrationGUI
 			$this->__initForm();
 		}
 		$this->tpl->setVariable('FORM', $this->form->getHTML());
+		
+		require_once "./Services/Registration/classes/class.ilRegistrationHelp.php"; ##alexedit
+		$this->tpl->setVariable("MESSAGE",ilRegistrationHelp::_getText());##alexedit
+
 	}
 	
 	protected function __initForm()
@@ -346,6 +350,23 @@ class ilAccountRegistrationGUI
 						$form_valid = false;
 					}
 				}
+				
+					## alexedit  Nur eine account pro Mailadresse
+					$mail_doppelt=false;
+					global $ilDB;
+					$res = $ilDB->queryF("SELECT count(*) as c FROM usr_data ".
+						"WHERE email = %s", array("text"), array($email));
+					$row = $ilDB->fetchObject($res);
+					if ($row->c >0 ) { 
+							$mail_obj = $this->form->getItemByPostVar('usr_email');
+							#$mail_obj->setAlert("");
+							ilUtil::sendFailure("<b>Sie sind bereits registriert.</b> <br>
+									Wenn Sie Ihre Zugangsdaten vergessen haben, 
+									verwenden Sie bitte die <a href='/pwassist.php'><b>Zugangsdaten-Unterst&uuml;tzung</b></a>.");
+							$form_valid = false;
+							$mail_doppelt=true;
+						}
+					##alexedit ende	
 			}
 		}
 

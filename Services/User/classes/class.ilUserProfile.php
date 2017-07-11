@@ -630,6 +630,29 @@ class ilUserProfile
 						}
 			
 						$a_form->addItem($ii);
+						
+						
+						#alexedit start
+						if ($im != "" && ilUtil::isConvertVersionAtLeast("6.3.8-3")) {
+							$webspace_dir = ilUtil::getWebspaceDir();
+							$image_dir = $webspace_dir."/usr_images";
+							$uploaded_file =  "$image_dir/upload_".$a_user->getId()."pic";
+							$iix_size=getimagesize($uploaded_file);			
+
+							if (abs($iix_size[0]-$iix_size[1])>10) { 
+								$iix = new ilSelectInputGUI("", "userfileposition");
+								$iix_options[0] = "Ausschnitt ändern";;
+								
+								if ($iix_size[0]<$iix_size[1])$iix_options["North"] = $lng->txt("pos_top");
+								if ($iix_size[0]>$iix_size[1])$iix_options["West"] = $lng->txt("pos_left");
+								$iix_options["Center"] = "Mitte"; 
+								if ($iix_size[0]<$iix_size[1])$iix_options["South"] = $lng->txt("pos_bottom");
+								if ($iix_size[0]>$iix_size[1])$iix_options["East"] = $lng->txt("pos_right");
+								
+								$iix->setOptions($iix_options);
+								$a_form->addItem($iix);
+							}	
+						}#alexedit ende
 					}
 					break;
 					

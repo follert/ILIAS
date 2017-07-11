@@ -133,7 +133,33 @@ class ilPersonalProfileGUI
 				if ($this->form->getItemByPostVar("userfile")->getDeletionFlag())
 				{
 					$ilUser->removeUserPicture();
-				}
+				} else { #alexedit start
+					$gravity = $this->form->getInput("userfileposition");
+					if ($gravity=="Center" || $gravity=="North" || $gravity=="South" || $gravity=="West" || $gravity=="East" ) {
+						$webspace_dir = ilUtil::getWebspaceDir();
+						$image_dir = $webspace_dir."/usr_images";
+						$uploaded_file =  "$image_dir/upload_".$ilUser->getId()."pic";
+					
+						$show_file  = "$image_dir/usr_".$ilUser->getId().".jpg";
+						$thumb_file = "$image_dir/usr_".$ilUser->getId()."_small.jpg";
+						$xthumb_file = "$image_dir/usr_".$ilUser->getId()."_xsmall.jpg";
+						$xxthumb_file = "$image_dir/usr_".$ilUser->getId()."_xxsmall.jpg";
+						$uploaded_file = ilUtil::escapeShellArg($uploaded_file);
+						$show_file = ilUtil::escapeShellArg($show_file);
+						$thumb_file = ilUtil::escapeShellArg($thumb_file);
+						$xthumb_file = ilUtil::escapeShellArg($xthumb_file);
+						$xxthumb_file = ilUtil::escapeShellArg($xxthumb_file);
+					
+						if(ilUtil::isConvertVersionAtLeast("6.3.8-3"))
+						{
+							ilUtil::execConvert($uploaded_file . "[0] -geometry 200x200^ -gravity ".$gravity." -extent 200x200 -quality 100 JPEG:".$show_file);
+							ilUtil::execConvert($uploaded_file . "[0] -geometry 100x100^ -gravity ".$gravity." -extent 100x100 -quality 100 JPEG:".$thumb_file);
+							ilUtil::execConvert($uploaded_file . "[0] -geometry 75x75^ -gravity ".$gravity." -extent 75x75 -quality 100 JPEG:".$xthumb_file);
+							ilUtil::execConvert($uploaded_file . "[0] -geometry 30x30^ -gravity ".$gravity." -extent 30x30 -quality 100 JPEG:".$xxthumb_file);
+						}
+					}
+					
+				} #alexedit ende
 				return;
 			}
 			else
@@ -144,6 +170,8 @@ class ilPersonalProfileGUI
 
 				// store filename
 				$ilUser->setPref("profile_image", $store_file);
+				$ilUser->setPref("public_upload", "y"); #alexedit  Bilder beim Uppload direkt freischalten
+				$ilUser->setPref("public_profile", "y"); #alexedit 
 				$ilUser->update();
 
 				// move uploaded file
@@ -572,7 +600,15 @@ class ilPersonalProfileGUI
 			$this->lng->txt("public_profile"),
 			$this->ctrl->getLinkTarget($this, "showPublicProfile"));
 
-		// export
+		
+		// password alexedit
+		$ilTabs->addTab("password",
+				$this->lng->txt("password"),
+				$this->ctrl->getLinkTargetByClass("ilPersonalSettingsGUI", "showPassword"));
+		
+		// export 
+		
+		/* alexedit
 		$ilTabs->addTab("export",
 			$this->lng->txt("export")."/".$this->lng->txt("import"),
 			$this->ctrl->getLinkTarget($this, "showExportImport"));
@@ -586,7 +622,8 @@ class ilPersonalProfileGUI
 			$ilTabs->addNonTabbedLink("profile_preview",
 				$this->lng->txt("user_profile_preview"),
 				$this->ctrl->getLinkTargetByClass("ilpublicuserprofilegui", "view"));
-		}		
+		}	
+		*/	#alexedit
 	}
 
 

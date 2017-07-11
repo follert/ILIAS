@@ -609,6 +609,7 @@ class ilObjOrgUnit extends ilContainer {
 		if (!$this->employee_role || !$this->superior_role) {
 			$this->doLoadRoles();
 		}
+		include_once "./Services/AccessControl/classes/class.ilObjRole.php"; #alexedit
 		$emp = new ilObjRole($this->employee_role);
 		$emp->setParent($this->getRefId());
 		$emp->delete();

@@ -136,7 +136,9 @@ class ilOrgUnitPathStorage extends ActiveRecord {
 			}
 		}
 
-		$expression = reset($path) . self::GLUE_SIMPLE . end($path);
+        $expression =  end($path); if (reset($path) !=  end($path)) #alexedit
+		    $expression = reset($path) . self::GLUE_SIMPLE . end($path);
+
 		/**
 		 * @var $ilOrgUnitPathStorage ilOrgUnitPathStorage
 		 */

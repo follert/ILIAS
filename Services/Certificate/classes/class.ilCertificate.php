@@ -473,6 +473,16 @@ class ilCertificate
 
 		$certificate_text = str_replace('[CLIENT_WEB_DIR]', CLIENT_WEB_DIR, $certificate_text);
 
+		#alexedit start
+		include_once "./Services/Certificate/classes/class.ilObjCertificateSettingsAccess.php";
+		if (!$this->hasBackgroundImage() && ilObjCertificateSettingsAccess::hasBackgroundImage()) {
+			$bg_default=ilObjCertificateSettingsAccess::getBackgroundImagePath() ;
+			$bg_skin=ILIAS_ABSOLUTE_PATH.substr(ilUtil::getImagePath("certificate.jpg"),1);
+			if (file_exists($bg_skin))
+				$certificate_text=str_replace($bg_default,$bg_skin,$certificate_text);
+		}
+		#alexedit ende
+		
 		return $certificate_text;
 	}
 	

@@ -270,14 +270,14 @@ class ilPersonalSettingsGUI
 		// password
 		if ($this->allowPasswordChange())
 		{
-			$ilTabs->addTarget("password", $this->ctrl->getLinkTarget($this, "showPassword"),
-				"", "", "", $showPassword);
+			#$ilTabs->addTarget("password", $this->ctrl->getLinkTarget($this, "showPassword"), #alexedit
+			#	"", "", "", $showPassword);
 		}
 
 		include_once 'Services/Mail/classes/class.ilMailGlobalServices.php';
 		if($rbacsystem->checkAccess('internal_mail', ilMailGlobalServices::getMailObjectRefId()))
 		{
-			$ilTabs->addTarget("mail_settings", $this->ctrl->getLinkTarget($this, "showMailOptions"), "", "", "", $showMailOptions);
+			#$ilTabs->addTarget("mail_settings", $this->ctrl->getLinkTarget($this, "showMailOptions"), "", "", "", $showMailOptions); #alexedit
 		}
 
 		require_once 'Modules/Chatroom/classes/class.ilPersonalChatSettingsFormGUI.php';
@@ -321,10 +321,15 @@ class ilPersonalSettingsGUI
 	{
 		global $ilTabs, $ilUser;
 		
-		$this->__initSubTabs("showPersonalData");
+		include_once './Services/User/classes/class.ilPersonalProfileGUI.php'; #alexedit
+		$PersonalProfileGUI=new ilPersonalProfileGUI();	$PersonalProfileGUI->setTabs(); #alexedit
+		
+		#$this->__initSubTabs("showPersonalData"); #alexedit;
 		$ilTabs->activateTab("password");
 
 		$this->setHeader();
+		$this->tpl->setVariable('HEADER', $this->lng->txt('personal_profile')); #alexedit
+		
 		// check whether password of user have to be changed
 		// due to first login or password of user is expired
 		if($ilUser->isPasswordChangeDemanded())

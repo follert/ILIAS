@@ -2446,17 +2446,26 @@ class ilObjUserFolderGUI extends ilObjectGUI
 			$this->tabs_gui->addTarget("usrf",
 				$this->ctrl->getLinkTarget($this, "view"), array("view","delete","resetFilter", "userAction", ""), "", "");
 
-			$this->tabs_gui->addTarget(
+		/*	$this->tabs_gui->addTarget( //alexedit start
 				"search_user_extended",
 				$this->ctrl->getLinkTargetByClass('ilRepositorySearchGUI',''),
 				array(),
 				"ilrepositorysearchgui",
 				""
-			);
+			);*/  //alexedit ende
 		}
 		
-		if ($rbacsystem->checkAccess("write",$this->object->getRefId()))
+		global  $rbacreview, $ilUser;; #alexedit
+		if ($rbacreview->isAssigned($ilUser->getId(),SYSTEM_ROLE_ID)) //alexedit
+		//if ($rbacsystem->checkAccess("write",$this->object->getRefId())) #alexedit
 		{
+			$this->tabs_gui->addTarget(  //alexedit start //alexedit start - verschoben von obiger if-Anweisung
+			 "search_user_extended",
+					$this->ctrl->getLinkTargetByClass('ilRepositorySearchGUI',''),
+					array(),
+					"ilrepositorysearchgui",
+					""
+			);  //alexedit ende
 			$this->tabs_gui->addTarget("settings",
 				$this->ctrl->getLinkTarget($this, "generalSettings"),array('settings','generalSettings','listUserDefinedField','newAccountMail'));
 				

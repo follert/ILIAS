@@ -75,7 +75,7 @@ class ilMail
 	protected $db;
 
 	/** @var ilFileDataMail */
-	protected $mfile;
+    public $mfile; #alexedt 
 
 	/** @var ilMailOptions */
 	protected $mail_options;
@@ -1643,22 +1643,23 @@ class ilMail
 	public static function _getInstallationSignature()
 	{
 		/** @var $ilClientIniFile ilIniFile */
-		global $ilClientIniFile;
+		global $ilClientIniFile, $ilSetting; //alexedit
 
-		$signature = "\n\n* * * * *\n";
+		$signature = "\n\n\n--\n"; //alexedit
 
 		$signature .= $ilClientIniFile->readVariable('client', 'name') . "\n";
 		if(strlen($desc = $ilClientIniFile->readVariable('client', 'description')))
 		{
-			$signature .= $desc . "\n";
+				#$signature .= $desc."\n";//alexedit
 		}
 
+		$signature .= $ilSetting->get('short_inst_name')."\n"; //alexedit
 		$signature .= ilUtil::_getHttpPath();
 
 		$clientdirs = glob(ILIAS_WEB_DIR . '/*', GLOB_ONLYDIR);
 		if(is_array($clientdirs) && count($clientdirs) > 1)
 		{
-			$signature .= '/login.php?client_id=' . CLIENT_ID; // #18051
+			#$signature .= '/login.php?client_id=' . CLIENT_ID; // #18051 //alexedit
 		}
 
 		$signature .= "\n\n";

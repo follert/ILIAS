@@ -755,7 +755,9 @@ class ilCalendarAppointmentGUI
 		// Description
 		if(strlen($desc = $this->app->getDescription()))
 		{
-			$info->addProperty($this->lng->txt('description'),ilUtil::makeClickable(nl2br($desc)));
+			#$info->addProperty($this->lng->txt('description'),$desc);  #alexedit
+            $info->addProperty($this->lng->txt('description'),ilUtil::makeClickable(nl2br($desc))); #alexedit
+
 		}
 		
 		// Location

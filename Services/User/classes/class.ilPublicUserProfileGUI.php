@@ -343,7 +343,14 @@ class ilPublicUserProfileGUI
 				)
 			);
 			$tpl->parseCurrentBlock();			
-		}
+		} 
+		elseif (in_array($user->getLogin(), explode(",",$ilSetting->get("adm_support_contacts")) ) ) { ##alexedit start
+			$tpl->setCurrentBlock("mail");
+			$tpl->setVariable("TXT_MAIL", $lng->txt("send_mail"));
+			$tpl->setVariable('HREF_MAIL', "mailto:".ilUtil::prepareFormOutput($user->getEmail()) ."?subject=Anfrage%20zu%20".urlencode($_SERVER['SERVER_NAME']));
+			$tpl->parseCurrentBlock();
+		}##alexedit ende
+
 		
 		$first_name = "";
 		if($this->getPublicPref($user, "public_title") == "y")

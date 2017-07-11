@@ -216,6 +216,7 @@ class ilInitialisation
 			return define('ILIAS_HTTP_PATH',ilUtil::removeTrailingPathSeparators(dirname($protocol.$host.$uri)));
 			
 		}
+		return define('ILIAS_HTTP_PATH',ilUtil::removeTrailingPathSeparators($protocol.$host."/")); #alexedit
 		return define('ILIAS_HTTP_PATH',ilUtil::removeTrailingPathSeparators($protocol.$host.$uri));
 	}
 
@@ -694,8 +695,8 @@ class ilInitialisation
 			ilSession::setClosingContext(ilSession::SESSION_CLOSE_LOGIN);
 		}
 		
-		$script = "login.php?target=".$_GET["target"]."&client_id=".$_COOKIE["ilClientId"].
-			"&auth_stat=".$a_auth_stat;
+		$script = "login.php?target=".$_GET["target"]. 
+			"&auth_stat=".$a_auth_stat; #alexedit
 					
 		self::redirect(
 			$script, 
@@ -914,7 +915,8 @@ class ilInitialisation
 	{		
 		// push the error level as high as possible / sane
 		error_reporting(E_ALL & ~E_NOTICE);
-		
+        error_reporting(E_ERROR); #alexedit;
+
 		// see handleDevMode() - error reporting might be overwritten again
 		// but we need the client ini first
 	}

@@ -279,6 +279,12 @@ class ilObjUser extends ilObject
 		}
 		else
 		{
+			global $rbacreview, $ilUser;  #alexedit
+			if ($rbacreview->isAssigned($ilUser->getId(),SYSTEM_ROLE_ID)) { //alexedit
+				$this->lastname= "[gelöschte Person]";  #alexedit
+				$this->fullname= "[gelöschte Person]";  #alexedit
+			}
+			return;	#alexedit	
 			$ilErr->raiseError("<b>Error: There is no dataset with id ".
 							   $this->id."!</b><br />class: ".get_class($this)."<br />Script: ".__FILE__.
 							   "<br />Line: ".__LINE__, $ilErr->FATAL);

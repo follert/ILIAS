@@ -1449,6 +1449,29 @@ class ilObjUserGUI extends ilObjectGUI
 					true));
 			}
 			$this->form_gui->addItem($pi);
+			
+			#alexedit start
+			if (($a_mode == "edit" || $a_mode == "upload" ) && ilUtil::isConvertVersionAtLeast("6.3.8-3")) {
+				$webspace_dir = ilUtil::getWebspaceDir();
+				$image_dir = $webspace_dir."/usr_images";
+				$uploaded_file =  $image_dir."/upload_".$this->object->getId() ."pic";
+				if (file_exists($uploaded_file)) $iix_size=getimagesize($uploaded_file);
+			
+				if (abs($iix_size[0]-$iix_size[1])>10) {
+					$iix = new ilSelectInputGUI("", "userfileposition");
+					$iix_options[0] = "Ausschnitt ändern";
+							
+					if ($iix_size[0]<$iix_size[1])$iix_options["North"] = $lng->txt("pos_top");
+					if ($iix_size[0]>$iix_size[1])$iix_options["West"] = $lng->txt("pos_left");
+					$iix_options["Center"] = "Mitte"; 
+					if ($iix_size[0]<$iix_size[1])$iix_options["South"] = $lng->txt("pos_bottom");
+					if ($iix_size[0]>$iix_size[1])$iix_options["East"] = $lng->txt("pos_right");
+								
+					$iix->setOptions($iix_options);
+					$this->form_gui->addItem($iix);
+				}
+			}#alexedit ende
+			
 		}
 
 		if($this->isSettingChangeable('birthday'))
@@ -1877,7 +1900,33 @@ class ilObjUserGUI extends ilObjectGUI
 			if ($userfile_input->getDeletionFlag())
 			{
 				$this->object->removeUserPicture();
-			}
+			} else { #alexedit start
+					$gravity = $this->form_gui->getInput("userfileposition");
+					if ($gravity=="Center" || $gravity=="North" || $gravity=="South" || $gravity=="West" || $gravity=="East" ) {
+						$webspace_dir = ilUtil::getWebspaceDir();
+						$image_dir = $webspace_dir."/usr_images";
+						$uploaded_file = $image_dir."/upload_".$this->object->getId()."pic";
+					
+						$show_file  = "$image_dir/usr_".$this->object->getId().".jpg";
+						$thumb_file = "$image_dir/usr_".$this->object->getId()."_small.jpg";
+						$xthumb_file = "$image_dir/usr_".$this->object->getId()."_xsmall.jpg";
+						$xxthumb_file = "$image_dir/usr_".$this->object->getId()."_xxsmall.jpg";
+						$uploaded_file = ilUtil::escapeShellArg($uploaded_file);
+						$show_file = ilUtil::escapeShellArg($show_file);
+						$thumb_file = ilUtil::escapeShellArg($thumb_file);
+						$xthumb_file = ilUtil::escapeShellArg($xthumb_file);
+						$xxthumb_file = ilUtil::escapeShellArg($xxthumb_file);
+					
+						if(ilUtil::isConvertVersionAtLeast("6.3.8-3"))
+						{
+							ilUtil::execConvert($uploaded_file . "[0] -geometry 200x200^ -gravity ".$gravity." -extent 200x200 -quality 100 JPEG:".$show_file);
+							ilUtil::execConvert($uploaded_file . "[0] -geometry 100x100^ -gravity ".$gravity." -extent 100x100 -quality 100 JPEG:".$thumb_file);
+							ilUtil::execConvert($uploaded_file . "[0] -geometry 75x75^ -gravity ".$gravity." -extent 75x75 -quality 100 JPEG:".$xthumb_file);
+							ilUtil::execConvert($uploaded_file . "[0] -geometry 30x30^ -gravity ".$gravity." -extent 30x30 -quality 100 JPEG:".$xxthumb_file);
+						}
+					}
+					
+				} #alexedit ende
 			return;
 		}
 		if ($_FILES["userfile"]["size"] == 0)
@@ -1892,6 +1941,8 @@ class ilObjUserGUI extends ilObjectGUI
 
 			// store filename
 			$this->object->setPref("profile_image", $store_file);
+			$this->object->setPref("public_upload", "y"); #alexedit  Bilder beim Uppload direkt freischalten
+			$this->object->setPref("public_profile", "y"); #alexedit
 			$this->object->update();
 
 			// move uploaded file

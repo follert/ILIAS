@@ -1124,9 +1124,9 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 		}				
 		
 		global $ilMainMenu;
-		$ilMainMenu->setMode(ilMainMenuGUI::MODE_TOPBAR_ONLY);		
-		$ilMainMenu->setTopBarBack($back, $back_caption);
-		
+        #$ilMainMenu->setMode(ilMainMenuGUI::MODE_TOPBAR_ONLY);		#alexedit;
+        #$ilMainMenu->setTopBarBack($back, $back_caption);#alexedit;
+
 		$this->renderFullscreenHeader($tpl, $owner);
 			
 		// #13564

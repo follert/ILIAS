@@ -174,6 +174,8 @@ class ilCalendarExport
 	
 	protected function createVTODO($app)
 	{
+		$app->setTitle("TODO: ".$app->getTitle(false)); #alexedit
+		$this->createVEVENT($app); #alexedit
 		// TODO
 		return true;
 	}

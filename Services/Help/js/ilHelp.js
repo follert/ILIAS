@@ -38,6 +38,8 @@ il.Help = {
 		}
 		il.Help.insertPanelHTML("");
 		//il.Help.reduceMainContentArea();
+		var rt = ($(window).width() - ( $('#mainspacekeeper').offset().left +  $('#mainspacekeeper').outerWidth())); //alexedit
+		if (rt < 300) $("#ilAll").css("margin-right", "300px"); //alexedit
 
 		obj = document.getElementById('ilHelpPanel');
 		obj.style.position = 'fixed';
@@ -146,6 +148,7 @@ il.Help = {
 			il.Overlay.hide(e, "ilHelpPanel");
 			il.Help.panel = false;
 			//il.Help.resetMainContentArea();
+			$("#ilAll").css("margin-right",""); //alexedit
 
 			il.Util.sendAjaxGetRequestToUrl(this.getAjaxUrl(),
 				{cmd: "resetCurrentPage"}, {mode: "resetCurrentPage"}, this.handleAjaxSuccess);

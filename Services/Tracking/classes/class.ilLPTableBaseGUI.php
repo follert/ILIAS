@@ -283,7 +283,8 @@ class ilLPTableBaseGUI extends ilTable2GUI
 	{
 		global $lng, $ilObjDataCache;
 		
-		$this->setDisableFilterHiding(true);
+		#$this->setDisableFilterHiding(true);
+		$this->setDisableFilterHiding(false); #alexedit
 		
 		// object type selection
 		include_once("./Services/Form/classes/class.ilSelectInputGUI.php");

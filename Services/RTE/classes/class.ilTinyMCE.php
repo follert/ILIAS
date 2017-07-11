@@ -201,6 +201,7 @@ class ilTinyMCE extends ilRTE
 			$tpl = new ilTemplate(($cfg_template === null ? "tpl.tinymce.html" : $cfg_template), true, true, "Services/RTE");
 			$this->handleImgContextMenuItem($tpl);
 			$tags = ilObjAdvancedEditing::_getUsedHTMLTags($a_module);
+			$tags[]="iframe"; #alexedit
 			$this->handleImagePluginsBeforeRendering($tags);
 			if ($allowFormElements)
 			{
@@ -244,7 +245,9 @@ class ilTinyMCE extends ilRTE
 			
 			$tpl->parseCurrentBlock();
 			
+            $this->tpl->setCurrentBlock("HeadContent"); #alexedit
 			$this->tpl->setVariable("CONTENT_BLOCK", $tpl->get());
+            $this->tpl->parseCurrentBlock(); #alexedit
 		}
 	}
 
@@ -300,7 +303,9 @@ class ilTinyMCE extends ilRTE
 		}
 		
 		$tpl->parseCurrentBlock();
+        $this->tpl->setCurrentBlock("HeadContent"); #alexedit
 		$this->tpl->setVariable("CONTENT_BLOCK", $tpl->get());
+        $this->tpl->parseCurrentBlock(); #alexedit
 	}
 
 	/**

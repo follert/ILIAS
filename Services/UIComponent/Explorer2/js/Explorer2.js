@@ -37,6 +37,26 @@ il.Explorer2 = {
 			id = data.rslt.obj[0].id, // id of li element
 			container_id = event.target.id,
 			t = il.Explorer2, url;
+		//alexedit start
+		$('#' + id +' .ilExp2NodeContent').off('hover');
+		$('#' + id +' .ilExp2NodeContent').hover(
+			function(){
+                if ($(this).hasClass("ilExp2NodeContent_hover")) return;
+
+                var pright=$("#" +container_id).offset().left+$("#" +container_id).innerWidth();
+				var left=$(this).offset().left;
+				if (left+$(this).outerWidth() < pright) return;
+				var top=$(this).position().top;
+				if ($("#left_nav").css('position')=='fixed') top = top + parseInt($("#left_nav").css('top'));
+					else top = top - $(document).scrollTop();
+				$(this).css("left",left);
+				$(this).css("top",top);	
+				$(this).addClass("ilExp2NodeContent_hover");		
+			},function(){
+				$(this).removeClass("ilExp2NodeContent_hover");	
+			}
+		);
+		//alexedit ende
 			
 		// the args[2] parameter is true for the initially
 		// opened nodes, but not, if manually opened

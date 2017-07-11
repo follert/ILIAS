@@ -1165,6 +1165,7 @@ class ilObjectDefinition// extends ilSaxParser
 					"devmode" => "0",
 					"allow_link" => "1",
 					"allow_copy" => $pl->allowCopy() ? '1' : '0',
+                    "export" => $ilPluginAdmin->supportsExport($component, $slotName, $slotId, $pl_name), #alexedit
 					"rbac" => "1",
 					"group" => NULL,
 					"system" => "0",

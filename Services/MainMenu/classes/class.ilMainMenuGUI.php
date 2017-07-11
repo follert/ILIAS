@@ -177,7 +177,7 @@ class ilMainMenuGUI
 		if($this->logo_only)
 		{		
 			$this->tpl->setVariable("HEADER_URL", $this->getHeaderURL());
-			$this->tpl->setVariable("HEADER_ICON", ilUtil::getImagePath("HeaderIcon.svg"));
+			$this->tpl->setVariable("HEADER_ICON", ilUtil::getImagePath("HeaderIcon.png")); #alexedit
 			
 			// #15759
 			include_once("./Modules/SystemFolder/classes/class.ilObjSystemFolder.php");
@@ -378,7 +378,7 @@ class ilMainMenuGUI
 		{
 			// $this->tpl->setVariable("TXT_LOGOUT", $lng->txt("logout"));
 			$this->tpl->setVariable("HEADER_URL", $this->getHeaderURL());
-			$this->tpl->setVariable("HEADER_ICON", ilUtil::getImagePath("HeaderIcon.svg"));
+			$this->tpl->setVariable("HEADER_ICON", ilUtil::getImagePath("HeaderIcon.png")); #alexedit
 		}
 		
 		include_once("./Modules/SystemFolder/classes/class.ilObjSystemFolder.php");
@@ -399,7 +399,7 @@ class ilMainMenuGUI
 
 		if ($this->mail) {
 			$new_mails = ilMailGlobalServices::getNumberOfNewMailsByUserId($ilUser->getId());
-
+			if ($new_mails==0) return; #alexedit
 			$a_tpl->setCurrentBlock('status_box');
 
 			$glyph = $ui_factory->glyph()->mail("ilias.php?baseClass=ilMailGUI");

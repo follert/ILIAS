@@ -137,14 +137,21 @@ class ilPasswordAssistanceGUI
 		$form->setFormAction($this->ctrl->getFormAction($this, 'submitAssistanceForm'));
 		$form->setTarget('_parent');
 
-		$username = new ilTextInputGUI($this->lng->txt('username'), 'username');
-		$username->setRequired(true);
-		$form->addItem($username);
 
 		$email = new ilTextInputGUI($this->lng->txt('email'), 'email');
 		$email->setRequired(true);
 		$form->addItem($email);
 
+        $username1 = new ilCheckboxInputGUI("Benutzername angeben", "enable_username");#alexedit
+        $username1->setValue("1");#alexedit
+        $form->addItem($username1);#alexedit
+
+        $username = new ilTextInputGUI($this->lng->txt('username'), 'username');
+	$username->setInfo("Nur erforderlich, wenn Sie zur Eingabe aufgefordert wurden.");#alexedit
+        $username->setRequired(false); #alexedit
+        $username1->addSubItem($username); #alexedit
+
+		
 		$form->addCommandButton('submitAssistanceForm', $this->lng->txt('submit'));
 
 		return $form;
@@ -206,8 +213,19 @@ class ilPasswordAssistanceGUI
 		$email    = $form->getInput('email');
 
 		$userObj = null;
-		$userid  = ilObjUser::getUserIdByLogin($username);
-		$txt_key = 'pwassist_invalid_username_or_email';
+	
+		#alexedit start
+		$enable_username = $form->getInput('enable_username');
+		$logins = ilObjUser::_getUserIdsByEmail($email);
+		if (count($logins)==1) $userid  = ilObjUser::getUserIdByLogin($logins[0]);
+		if (count($logins)>1) {
+		    if ($username && $enable_username) $userid = ilObjUser::getUserIdByLogin($username);
+		    if ($userid==0) return $this->submitUsernameAssistanceForm();
+		}
+		$txt_key = 'pwassist_invalid_email';
+		#alexedit ende
+		
+
 		if($userid != 0)
 		{
 			$userObj = new ilObjUser($userid);
@@ -319,6 +337,9 @@ class ilPasswordAssistanceGUI
 			. '?client_id=' . $this->ilias->getClientId()
 			. $delimiter . 'lang=' . $this->lng->getLangKey()
 			. $delimiter . 'key=' . $pwassist_session['pwassist_id'];
+
+		$pwassist_url  				= $protocol . $_SERVER['HTTP_HOST'] .str_replace('ilias.php', 'pwassist.php', $_SERVER['PHP_SELF']) . '?key='. $pwassist_session['pwassist_id']; #alexedit
+		$alternative_pwassist_url   = $protocol . $_SERVER['HTTP_HOST'] .str_replace('ilias.php', 'pwassist.php', $_SERVER['PHP_SELF']) . '?key='. $pwassist_session['pwassist_id']; #alexedit
 
 		$contact_address = ilMail::getIliasMailerAddress();
 
@@ -572,6 +593,7 @@ class ilPasswordAssistanceGUI
 	 */
 	public function showUsernameAssistanceForm(ilPropertyFormGUI $form = null)
 	{
+		return $this->showAssistanceForm(); #alexedit;
 		ilStartUpGUI::initStartUpTemplate('tpl.pwassist_username_assistance.html', true);
 		$this->tpl->setVariable('IMG_PAGEHEADLINE', ilUtil::getImagePath('icon_auth.svg'));
 		$this->tpl->setVariable('TXT_PAGEHEADLINE', $this->lng->txt('password_assistance'));
@@ -688,6 +710,7 @@ class ilPasswordAssistanceGUI
 
 		$server_url      = $protocol . $_SERVER['HTTP_HOST'] . substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')) . '/';
 		$login_url       = $server_url . 'pwassist.php' . '?client_id=' . $this->ilias->getClientId() . '&lang=' . $this->lng->getLangKey();
+		$login_url       = $server_url . 'pwassist.php' ; #alexedit
 		$contact_address = ilMail::getIliasMailerAddress();
 
 		$mm = new ilMimeMail();

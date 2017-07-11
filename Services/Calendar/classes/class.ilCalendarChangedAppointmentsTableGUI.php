@@ -186,6 +186,7 @@ class ilCalendarChangedAppointmentsTableGUI extends ilTable2GUI
 			$tmp_arr['milestone'] = $entry->isMilestone();
 			$tmp_arr['title'] = $entry->getPresentationTitle();
 			$tmp_arr['description'] = $entry->getDescription();
+            $tmp_arr['description'] = ilUtil::makeClickable(nl2br($entry->getDescription())); #alexedit
 			$tmp_arr['fullday'] = $entry->isFullday();
  			#$tmp_arr['begin'] = $entry->getStart()->get(IL_CAL_UNIX);
  			#$tmp_arr['end'] = $entry->getEnd()->get(IL_CAL_UNIX);

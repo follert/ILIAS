@@ -72,7 +72,7 @@ class ilCalendarSubscriptionGUI
 		$info->setFormAction($GLOBALS['ilCtrl']->getFormAction($this));
 
 		$hash = $this->createToken();
-		$url = ILIAS_HTTP_PATH.'/calendar.php?client_id='.CLIENT_ID.'&token='.$hash;
+		$url = ILIAS_HTTP_PATH.'/calendar.php?token='.$hash; #alexedit 
 		$info->addSection($this->getCalendar()->getTitle());
 		$info->addProperty($GLOBALS['lng']->txt('cal_ical_url'), $url, $url);
 

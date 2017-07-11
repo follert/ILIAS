@@ -445,7 +445,7 @@ class ilObjSAHSLearningModuleGUI extends ilObjectGUI
 		case "exportFile":
 			$sFile = $_FILES["scormfile"];
 			$fType = $sFile["type"];
-			$cFileTypes = ["application/zip", "application/x-compressed"];
+			$cFileTypes = ["application/zip", "application/x-compressed","application/x-zip-compressed"]; #alexedit
 
 			if (in_array ($fType, $cFileTypes))
 			{

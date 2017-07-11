@@ -173,10 +173,36 @@ class ilAuthContainerSOAP extends Auth_Container
 		}
 		*/
 		
+		# alexedit start
+		if (!mb_detect_encoding($this->response["lastname"], 'UTF-8', true))
+			$this->response["lastname"]=utf8_encode($this->response["lastname"]);
+		if (!mb_detect_encoding($this->response["firstname"], 'UTF-8', true))
+			$this->response["firstname"]=utf8_encode($this->response["firstname"]);
+		# alexedit ende
+
 		$local_user = $this->response["local_user"];
 		if ($local_user != "")
 		{
 			// to do: handle update of user
+
+			#alexedit: start update user
+			
+			$userObj = new ilObjUser(ilObjUser::_lookupId($local_user)); 
+			
+			if ($this->response["firstname"]!="") $userObj->setFirstname($this->response["firstname"]);
+			if ($this->response["lastname"]!="") $userObj->setLastname( $this->response["lastname"]); 
+			if ($this->response["sex"]!="") $userObj->setGender($this->response["sex"]); 
+			elseif ($this->response["gender"]!="") $userObj->setGender($this->response["gender"]); 
+			if ($this->response["email"]!="") $userObj->setEmail($this->response["email"]); 
+			
+			if ($this->response["novell"]!="") $userObj->setMatriculation($this->response["novell"]);
+			
+			$userObj->setTitle($userObj->getFullname()); 
+			$userObj->setDescription($userObj->getEmail());
+			$userObj->update();		
+			
+			#alexedit: ende update user
+			
 			$a_auth->setAuth($local_user);
 			return true;
 		}
@@ -192,7 +218,10 @@ class ilAuthContainerSOAP extends Auth_Container
 		
 		$newUser["firstname"] = $this->response["firstname"];
 		$newUser["lastname"] = $this->response["lastname"];
+		if ($this->response["sex"]!="") $newUser["gender"] = $this->response["sex"]; else # alexedit
+		 $newUser["gender"] = $this->response["gender"]; 	#alexedit
 		$newUser["email"] = $this->response["email"];
+		$newUser["institution"] = $this->response["role"];	#alexedit
 		
 		$newUser["login"] = $local_user;
 		
@@ -217,6 +246,18 @@ class ilAuthContainerSOAP extends Auth_Container
 		$newUser["auth_mode"] = "soap";
 		$newUser["ext_account"] = $a_username;
 		$newUser["profile_incomplete"] = 1;
+		$newUser["profile_incomplete"] = 0; #alexedit
+		//role  and style  #alexedit start
+		$newrole=$ilSetting->get('soap_auth_user_default_role');
+	#	if ($this->response["role"]!="") {
+	#		global $rbacreview;
+	#		require_once  ("./zc/allgemein/einlesen.php"); 
+	#		$rolename=$this->response["role"]; 
+	#		$roles=$rbacreview->getRolesByFilter(ilRbacReview::FILTER_ALL_GLOBAL);
+	#		foreach ($roles as $role) 
+	#			if (stripos(string2key($role['title']),string2key($rolename)) !==false) { $newrole= $role['rol_id']; break;}	
+	#	}
+		#alexedit ende
 		
 		// system data
 		$userObj->assignData($newUser);
@@ -246,7 +287,8 @@ class ilAuthContainerSOAP extends Auth_Container
 		$userObj->writePrefs();
 		
 		// to do: test this
-		$rbacadmin->assignUser($ilSetting->get('soap_auth_user_default_role'), $userObj->getId(),true);
+		#$rbacadmin->assignUser($ilSetting->get('soap_auth_user_default_role'), $userObj->getId(),true); #alexedit
+		$rbacadmin->assignUser($newrole, $userObj->getId(),true); #alexedit
 
 		// send account mail
 		if ($ilSetting->get("soap_auth_account_mail"))

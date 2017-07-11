@@ -154,8 +154,9 @@ class ilTestExpressPageObjectGUI extends ilAssQuestionPageGUI
                 elseif( $q_gui->object )
 				{
 				    $total = $this->test_object->evalTotalPersons();
-		    
-                    $this->setOutputMode( $total == 0 ? IL_PAGE_EDIT : IL_PAGE_PREVIEW);
+
+                    #$this->setOutputMode( $total == 0 ? IL_PAGE_EDIT : IL_PAGE_PREVIEW); #alexedit
+                    $this->setOutputMode(  IL_PAGE_EDIT );				#alexedit
 		    
 					if( $total != 0 )
 					{

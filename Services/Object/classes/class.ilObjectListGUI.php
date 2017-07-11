@@ -2584,6 +2584,8 @@ class ilObjectListGUI
 				continue;
 			}
 			
+			if ($command["cmd"]=='join') continue; #alexedit
+			
 			if ($command["granted"] == true )
 			{
 				if (!$command["default"] === true)
@@ -2638,7 +2640,7 @@ class ilObjectListGUI
 			// info screen commmand
 			if ($this->getInfoScreenStatus())
 			{
-				$this->insertInfoScreenCommand();
+					if($this->checkCommandAccess('delete','',$this->ref_id,$this->type))  $this->insertInfoScreenCommand(); #alexedit
 			}
 
 			if (!$this->isMode(IL_LIST_AS_TRIGGER))
@@ -3356,6 +3358,19 @@ class ilObjectListGUI
 
 			$this->tpl->setVariable("SRC_ICON",
 				ilObject::_getIcon($this->obj_id, "small", $this->getIconImageType()));
+			
+			##alexedit start 
+			include_once('Services/AdvancedMetaData/classes/class.ilAdvancedMDValues.php');
+			foreach (ilAdvancedMDValues::findByObjectId($this->obj_id) as $feld) 
+				if (ilAdvancedMDFieldDefinition::getInstance($feld['field_id'])->getTitle() == 'WBT-BILD-ID') {
+					$wbt_png = "./Customizing/global/skin/". ilStyleDefinition::getCurrentSkin()."/images/bg_wbt/bg_".$feld['value'].".png";
+					$wbt_jpg = "./Customizing/global/skin/". ilStyleDefinition::getCurrentSkin()."/images/bg_wbt/bg_".$feld['value'].".jpg";
+					if (is_file($wbt_png) )
+						$this->tpl->setVariable("SRC_ICON",$wbt_png );
+					elseif (is_file($wbt_jpg) )
+						$this->tpl->setVariable("SRC_ICON",$wbt_jpg );
+				}
+			##alexedit ende
 			$this->tpl->parseCurrentBlock();
 			$cnt += 1;
 		}

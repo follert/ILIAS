@@ -90,7 +90,7 @@ class ilSystemSupportContactsGUI
 					$mail = ilObjUser::_lookupEmail($user);
 					if(trim($mail))
 					{
-						return "mailto:".$mail;
+						return "mailto:".$mail."?subject=Anfrage%20zu%20".urlencode($_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);; #alexedit;
 					}
 				}
 			}
@@ -100,6 +100,7 @@ class ilSystemSupportContactsGUI
 			}
 		}
 
+        global $ilSetting;  return "mailto:".ilUtil::prepareFormOutput($ilSetting->get("admin_email"))."?subject=Anfrage%20zu%20".urlencode($_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);  #alexedit;
 
 		/*$m = ilUtil::prepareFormOutput(ilSystemSupportContacts::getMailToAddress());
 		if ($m != "")

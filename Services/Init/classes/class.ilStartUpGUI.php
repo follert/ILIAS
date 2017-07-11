@@ -2192,7 +2192,8 @@ class ilStartUpGUI
 		ilUIFramework::init();
 		
 		$tpl->addBlockfile('CONTENT', 'content', 'tpl.startup_screen.html', 'Services/Init');
-		$tpl->setVariable('HEADER_ICON', ilUtil::getImagePath('HeaderIcon.svg'));
+		$tpl->setVariable('HEADER_ICON', ilUtil::getImagePath('HeaderIcon.png'));  ## alexedit;
+		$tpl->setVariable('DOMAIN',  $_SERVER['SERVER_NAME']); ## alexedit;
 
 		if($a_show_back)
 		{

@@ -507,6 +507,8 @@ class ilUserTableGUI extends ilTable2GUI
 	{
 		global $ilCtrl, $lng;
 
+		global $rbacreview, $ilUser; //alexedit  
+		if (!$rbacreview->isAssigned($ilUser->getId(),SYSTEM_ROLE_ID)	&& $rbacreview->isAssigned($user["usr_id"],SYSTEM_ROLE_ID) ) return; //alexedit
 		$ilCtrl->setParameterByClass("ilobjusergui", "letter", $_GET["letter"]);
 
 		foreach ($this->getSelectedColumns() as $c)
